@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>Satu Data SDN 5 Tambak Ukir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
+        header { background: #007BFF; color: white; padding: 1rem; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin: 1rem auto; background: white; }
+        th, td { padding: 0.5rem; border: 1px solid #ddd; text-align: left; }
+        th { background: #f0f0f0; }
+        h1 { margin: 0; }
+        .container { padding: 1rem; }
+        .status { padding: 1rem; text-align: center; }
+        .status.error { color: #b30000; background: #ffecec; border: 1px solid #ffb3b3; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Satu Data SDN 5 Tambak Ukir</h1>
+        <p>Data Siswa (Terkoneksi Google Sheet)</p>
+    </header>
+    <div class="container">
+        <div id="status" class="status">Memuat data...</div>
+        <table id="data-table">
+            <thead>
+                <tr id="table-head"></tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const sheetURL = "https://opensheet.elk.sh/1zNL8jxRxy7z4h_V7iL-uxejIDUdFgYP0G_tqf5G1Fcg/Data%20Siswa";
+
+        const statusEl = document.getElementById("status");
+
+        function showError(message) {
+            statusEl.textContent = message;
+            statusEl.classList.add("error");
+        }
+
+        fetch(sheetURL)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Permintaan gagal dengan status ${response.status} ${response.statusText}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (!Array.isArray(data)) {
+                    const detail = data && data.error ? `: ${data.error}` : "";
+                    throw new Error(`Format data tidak valid${detail}`);
+                }
+                if (data.length === 0) {
+                    statusEl.textContent = "Tidak ada data untuk ditampilkan.";
+                    return;
+                }
+
+                const headRow = document.getElementById("table-head");
+                const bodyTable = document.getElementById("table-body");
+
+                // Set table headers
+                Object.keys(data[0]).forEach(key => {
+                    const th = document.createElement("th");
+                    th.innerText = key;
+                    headRow.appendChild(th);
+                });
+
+                // Fill table data
+                data.forEach(row => {
+                    const tr = document.createElement("tr");
+                    Object.values(row).forEach(cell => {
+                        const td = document.createElement("td");
+                        td.innerText = cell;
+                        tr.appendChild(td);
+                    });
+                    bodyTable.appendChild(tr);
+                });
+
+                statusEl.remove();
+            })
+            .catch(err => {
+                console.error("Gagal memuat data siswa:", err);
+                showError(`Gagal memuat data. ${err.message}`);
+            });
+    </script>
+</body>
+</html>

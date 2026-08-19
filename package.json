@@ -1,0 +1,13 @@
+{
+  "name": "satu-data",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "4.1.10",
+    "vitest": "4.1.10"
+  }
+}

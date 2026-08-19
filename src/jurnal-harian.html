@@ -51,6 +51,7 @@
   footer { text-align: center; padding: 1.5rem 1rem; color: #778; font-size: .8rem; }
   @media print {
     header, .kartu.form, .kartu.filter, .aksi, .baris-aksi, footer { display: none !important; }
+    #data-jurnal th:last-child, #data-jurnal td:last-child { display: none; }
     body { background: #fff; }
     .kartu { border: none; padding: 0; }
   }
@@ -183,7 +184,7 @@
 
   <section class="kartu">
     <h2>Daftar Jurnal</h2>
-    <table>
+    <table id="data-jurnal">
       <thead>
         <tr>
           <th>Tanggal</th><th>Kelas</th><th>Mapel</th><th>Guru</th><th>Materi</th>
